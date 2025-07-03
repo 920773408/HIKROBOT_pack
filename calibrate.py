@@ -55,8 +55,9 @@ def calibrate_right_left(datafile_right, datafile_left):
         img_l_markers = cv2.aruco.drawDetectedMarkers(img_l.copy(), marker_corners_l, marker_ids_l)
         img_r_markers = cv2.aruco.drawDetectedMarkers(img_r.copy(), marker_corners_r, marker_ids_r)
         cv2.imshow("Left Markers", img_l_markers)
+        cv2.waitKey(500)
         cv2.imshow("Right Markers", img_r_markers)
-        cv2.waitKey(50)  # 显示500毫秒
+        cv2.waitKey(500)  # 显示500毫秒
 
         # 🔹 Interpolate ChArUco corners
         _, charuco_corners_l, charuco_ids_l = cv2.aruco.interpolateCornersCharuco(marker_corners_l, marker_ids_l,
@@ -173,7 +174,7 @@ def calibrate_color_left(datafile_color, datafile_left, K_left, D_left):
         img_c_markers = cv2.aruco.drawDetectedMarkers(img_c.copy(), marker_corners_c, marker_ids_c)
         cv2.imshow("Left Markers", img_l_markers)
         cv2.imshow("Color Markers", img_c_markers)
-        cv2.waitKey(50)  # 显示500毫秒
+        cv2.waitKey(500)  # 显示500毫秒
 
         # 🔹 Interpolate ChArUco corners
         _, charuco_corners_l, charuco_ids_l = cv2.aruco.interpolateCornersCharuco(marker_corners_l, marker_ids_l,
@@ -343,9 +344,9 @@ if __name__ == "__main__":
     shm_queue = ImageSetQueue(queue_size, img_shape, tags=("l", "r"), timestamp_max_deviation=0.05, timestamp_staple=1)
     rgb_queue = ImageQueue(queue_size, (1024, 1280, 3))
     collect_proc = multiprocessing.Process(target=collect_images,args=(shm_queue, rgb_queue))
-    camera_r_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 0))
-    camera_l_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 1))
-    camera_rgb_proc = multiprocessing.Process(target=open_cam, args=(rgb_queue, 2))
+    camera_r_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 1))
+    camera_l_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 2))
+    camera_rgb_proc = multiprocessing.Process(target=open_cam, args=(rgb_queue, 0))
     collect_proc.start()
     camera_r_proc.start()
     camera_l_proc.start()

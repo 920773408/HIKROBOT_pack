@@ -143,9 +143,9 @@ if __name__ == "__main__":
     ], dtype=np.float32)
 
     display_proc = multiprocessing.Process(target=display, args=(shm_queue, needle_queue, real_world_points, img_shape))
-    camera_r_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 0))
-    camera_l_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 1))
-    camera_rgb_proc = multiprocessing.Process(target=open_cam, args=(rgb_queue, 2))
+    camera_r_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 1))
+    camera_l_proc = multiprocessing.Process(target=open_cam, args=(shm_queue, 2))
+    camera_rgb_proc = multiprocessing.Process(target=open_cam, args=(rgb_queue, 0))
     vtk_proc = multiprocessing.Process(target=p_vtk, args=(needle_queue, rgb_queue, real_world_points))
     input_point_poc = multiprocessing.Process(target=input_point, args=(needle_queue,))
     display_proc.start()

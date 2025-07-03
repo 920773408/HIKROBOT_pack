@@ -239,9 +239,9 @@ class CameraOperation(object):
                 # print('nDevTimeStamp', n_index, nDevTimeStamp)
 
                 # 将图像和相机索引放入队列
-                if n_index == 0:
+                if n_index == 1:
                     queue.put_single_image(image, "r", nDevTimeStamp)
-                elif n_index == 1:
+                elif n_index == 2:
                     queue.put_single_image(image, "l", nDevTimeStamp)
                 else:  # rgb相机
                     queue.put_image(image)
@@ -324,11 +324,11 @@ class CameraInterface(object):
                 self.b_is_open = True
 
         # 配置主相机和从相机
-        if self.i == 1:
-            self.cam_operation.configure_master_camera()  # 假设第二个相机是主相机
-        if self.i == 0:
-            self.cam_operation.configure_slave_camera()  # 假设第一个相机是从相机
         if self.i == 2:
+            self.cam_operation.configure_master_camera()  # 假设第二个相机是主相机
+        if self.i == 1:
+            self.cam_operation.configure_slave_camera()  # 假设第一个相机是从相机
+        if self.i == 0:
             self.cam_operation.configure_RGB_camera()  # 第三个相机是RGB相机
 
     def start_grabbing(self, queue):
