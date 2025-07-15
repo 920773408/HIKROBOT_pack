@@ -112,10 +112,14 @@ class CameraOperation(object):
             print('Set Frame Rate failed! [{0:#X}]'.format(ret))
             return False
 
-        ret = self.obj_cam.MV_CC_SetFloatValue("ExposureTime", 5000)
+        ret = self.obj_cam.MV_CC_SetFloatValue("ExposureTime", 50000)
         if ret != 0:
             print('Set Exposure Time failed! [{0:#X}]'.format(ret))
             return False
+
+        ret = self.obj_cam.MV_CC_SetEnumValue("GainAuto", 2)
+        if ret != 0:
+            print('Set Gain Auto failed! [{0:#X}]'.format(ret))
 
         return True
 
@@ -141,10 +145,14 @@ class CameraOperation(object):
             print('Set Trigger Activation failed! [{0:#X}]'.format(ret))
             return False
 
-        ret = self.obj_cam.MV_CC_SetFloatValue("ExposureTime", 5000)
+        ret = self.obj_cam.MV_CC_SetFloatValue("ExposureTime", 50000)
         if ret != 0:
             print('Set Exposure Time failed! [{0:#X}]'.format(ret))
-        return True
+
+        ret = self.obj_cam.MV_CC_SetEnumValue("GainAuto", 2)
+        if ret != 0:
+            print('Set Gain Auto failed! [{0:#X}]'.format(ret))
+
 
     def configure_RGB_camera(self):
         # ch:设置触发模式为on | en:Set trigger mode as on
@@ -329,7 +337,7 @@ class CameraInterface(object):
         if self.i == 1:
             self.cam_operation.configure_slave_camera()  # 假设第一个相机是从相机
         if self.i == 0:
-            self.cam_operation.configure_RGB_camera()  # 第三个相机是RGB相机
+            self.cam_operation.configure_RGB_camera()  # 第0个相机是RGB相机
 
     def start_grabbing(self, queue):
         if (not self.b_is_open) or self.b_is_grab:
@@ -685,19 +693,16 @@ class ImageProcess:
 
         return subpixel_centroids
 
-    def match_features(self, left_centroids, right_centroids, x_threshold=100, y_threshold=20):
+    def match_features(self, left_centroids, right_centroids, x_threshold=100, y_threshold=50):
         def undistort_points(points, K, D, R, P):
             points = np.expand_dims(points, axis=1)
             undistorted_points = cv2.undistortPoints(points, K, D, R=R, P=P)
             return np.atleast_2d(undistorted_points.squeeze())
 
-        '''
         # 校正左右像素点
-        left_centroids_rectified = undistort_points(np.array(left_centroids, dtype=np.float32), self.K_left,
-                                                    self.D_left, self.R1, self.P1)
-        right_centroids_rectified = undistort_points(np.array(right_centroids, dtype=np.float32), self.K_right,
-                                                     self.D_right, self.R2, self.P2)
-        '''
+        # left_centroids_rectified = undistort_points(np.array(left_centroids, dtype=np.float32), self.K_left, self.D_left, self.R1, self.P1)
+        # right_centroids_rectified = undistort_points(np.array(right_centroids, dtype=np.float32), self.K_right, self.D_right, self.R2, self.P2)
+
         # print("left_centroids_rectified", left_centroids_rectified)
         # print("right_centroids_rectified", right_centroids_rectified)
         right_centroids_rectified = right_centroids
@@ -1110,7 +1115,6 @@ class vtkTimerCallback(object):
         self.dict = None
         self.target_point, self.in_point, self.deepth, self.ordered_points = self.calculate_transform()
 
-
     def execute(self, obj, event):
         if not self.rgb_queue.empty():
             t, tip_point_uv, ordered_points_3d, virtual_tip = self.update_matrix()
@@ -1447,16 +1451,10 @@ class vtkTimerCallback(object):
         # 给定点集
         # 相机坐标系
         body_points = np.array([
-            [-30.355883915, 100.67416798, 1014.589547975],
-            [150.2976034, 112.08755179, 1079.1106028],
-            [-88.57431489, 119.926869385, 1197.08400926],
-            [89.70618167, 132.280841745, 1260.245789415]
-        ], dtype=np.float32)
-        body_points = np.array([
-            [-182.0744618, 107.77715279, 1468.45215107],
-            [38.86371826, 121.40584615, 1520.87248303],
-            [-209.10719428, 119.17108742, 1584.71426082],
-            [13.61762781, 130.34656426, 1627.98280199]
+            [-98.24178923, 197.17062404, 950.33356034],
+            [132.26495276, 212.12627504, 960.11755328],
+            [-104.15879537, 205.92464236, 1071.06191823],
+            [126.35393799, 215.80688927, 1075.52736572]
         ], dtype=np.float32)
         # Oc = np.array([-240.83324343, 4.97080309, -5.08946637], dtype=np.float32)
         data = np.load("rgb_to_left_calib_params.npz")
