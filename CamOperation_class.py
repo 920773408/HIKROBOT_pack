@@ -1451,10 +1451,10 @@ class vtkTimerCallback(object):
         # 给定点集
         # 相机坐标系
         body_points = np.array([
-            [-98.24178923, 197.17062404, 950.33356034],
-            [132.26495276, 212.12627504, 960.11755328],
-            [-104.15879537, 205.92464236, 1071.06191823],
-            [126.35393799, 215.80688927, 1075.52736572]
+            [-98.06854245, 202.91547903, 951.70421836],
+            [129.6827553, 213.67490032, 958.57602901],
+            [-100.44236143, 208.30480044, 1069.16058497],
+            [ 127.50806453, 217.10933224, 1073.69711968]
         ], dtype=np.float32)
         # Oc = np.array([-240.83324343, 4.97080309, -5.08946637], dtype=np.float32)
         data = np.load("rgb_to_left_calib_params.npz")
@@ -1514,9 +1514,13 @@ class vtkTimerCallback(object):
         target_point = ct_data["target_point"]
         # target_point = target_points[0]
         x, y, z = target_point
-        z = z + 30
+        z = z - 15
+        target_point = np.array([x, y, z], dtype=np.float32)
         in_point = ct_data["in_point"]
         # in_point = np.array([x, y, z], dtype=np.float32)
+        x, y, z = in_point
+        z = z - 15
+        in_point = np.array([x, y, z], dtype=np.float32)
         x, y, z = in_point
         x = x + 10
         in_y_point = np.array([x, y, z], dtype=np.float32)
@@ -1662,7 +1666,7 @@ class vtkTimerCallback(object):
         angle_l_xy_rad = np.radians(angle_l_xy)
         # print(angle_l_xy)
         # 计算点 A 的半径
-        r = radius * (min(angle_l_z, 45) / 45)  # 点 A 从圆心到圆弧的距
+        r = radius * (min(angle_l_z, 15) / 15)  # 点 A 从圆心到圆弧的距
         center = (120, h - 120)
         # 计算点 A 的位置
         x = int(center[0] - r * np.cos(angle_l_xy_rad))

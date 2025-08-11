@@ -30,6 +30,7 @@ def display(shm_queue, needle_queue, real_world_points, img_shape):
             if left_image is not None and right_image is not None:
 
                 tip_point, assist_point, mapped_point_uv_left = image_process(right_image, left_image, img_process, needle_queue)
+                # print('tip_point', tip_point)
                 if mapped_point_uv_left is not None:
                     # cv2.circle(right_image, mapped_point_uv_left, 5, (128, 128, 128), -1)
                     # cv2.imshow('right', right_image)
